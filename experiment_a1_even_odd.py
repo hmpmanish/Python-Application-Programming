@@ -1,6 +1,6 @@
 """
 Question: Write a Python program to check whether a number entered 
-by the user is Even or Odd.
+by the user is Even Or Odd.
 """
 
 num = int(input("Enter a number: "))
