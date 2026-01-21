@@ -10,4 +10,4 @@ while True:
     os.system('git commit -m "experiment_3_distance.py"')
     os.system("git push origin main")
     print("✅ Code auto pushed to GitHub!")
-    time.sleep(19) 
+    time.sleep(1) 
