@@ -8,5 +8,8 @@ count1 = A.count('1')
 
 if count0 == 1 or count1 == 1:
     print("YES")
+
 else:
     print("NO")
+    # hmpmanish
+
