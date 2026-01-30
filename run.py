@@ -1,16 +1,23 @@
+import subprocess
 import os
 import time
 
-# Path to your repo
 repo_path = r"C:\Users\Manish Pandey\Desktop\SU\CSCR1503-Python-Application-Programming"
 
 while True:
     os.chdir(repo_path)
-    os.system("git add .")
-    os.system('git commit -m "experiment_6_flip_binary_digit.py"')
-    os.system("git push origin main")
-    print("✅ Code auto pushed to GitHub!")
-    time.sleep(300)  # Wait for 5 minutes before next push
-# git add .
-# git commit -m "experiment_5experiment_6_flip_binary_digit.py"
-# git push origin main
+    
+    # Stage all changes
+    subprocess.run(["git", "add", "."])
+    
+    # Check if anything to commit
+    status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True).stdout
+    
+    if status.strip():
+        subprocess.run(["git", "commit", "-m", "Auto commit by Python script"])
+        subprocess.run(["git", "push", "origin", "main"])
+        print("✅ Changes pushed to GitHub!")
+    else:
+        print("No changes to push.")
+    
+    time.sleep(300)
