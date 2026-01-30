@@ -11,3 +11,6 @@ while True:
     os.system("git push origin main")
     print("✅ Code auto pushed to GitHub!")
     time.sleep(300)  # Wait for 5 minutes before next push
+# git add .
+# git commit -m "Updated experiment 4 and run.py"
+# git push origin main
