@@ -1,5 +1,6 @@
 # Create a nested list
 l = ["hmp", [8, 4, 6], ["a"]]
+# #HMPMANISH
 
 # Print slicing from index 2 to 5
 # Syntax: list[start:end]

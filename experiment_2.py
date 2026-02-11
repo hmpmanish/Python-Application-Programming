@@ -1,7 +1,9 @@
 """
 Question 2: Write a Python program to determine eligibility for the End Term Exam (ETE) 
 based on scores in three consecutive assignments using nested if-else statements.
-"""
+""" 
+"""#HMPMANISH """
+
 
 # Input marks for Assignment 1
 a1_score = int(input("Enter assignment 1 marks: "))
