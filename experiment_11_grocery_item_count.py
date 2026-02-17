@@ -1,4 +1,8 @@
-
+""""You are provided with a list of grocery items purchased by a 
+customer. As shown below. Write python code to print the name of 
+the item and its quantity (occurrences in the list).
+L=[“pen”,“ball”,“eraser”,“pen”,“band”,“pen”,“Pencil”,“ball”]
+Which item is the most occurring item from the list?""""
 
 
 
