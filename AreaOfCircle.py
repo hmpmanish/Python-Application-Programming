@@ -39,3 +39,21 @@ B1 = AreaOfCircle(5)
 
 A1.circle()  # Area is 28.26
 B1.circle()  # Area is 78.5
+
+
+# File name: area_of_circle_v3.py
+
+# Create a class to calculate the area of a circle
+class Area:
+    def __init__(self, radius):
+        # Store the radius in the object
+        self.radius = radius
+        
+        # Calculate area using formula πr²
+        a = 3.14 * self.radius * self.radius
+        
+        # Print the calculated area
+        print("Area is", a)
+
+# Create an object of the class with radius 3
+A1 = Area(3)  # Output: Area is 28.26
