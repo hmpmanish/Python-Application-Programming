@@ -1,4 +1,9 @@
+# File name: fl1.py
 # Program to open and read a file
+
+# -------------------------------
+# Section 1: Read entire file
+# -------------------------------
 
 # Open the file in read mode ("r")
 # r before the path makes it a raw string (avoids escape sequence issues)
@@ -11,8 +16,9 @@ print(f.read())
 f.close()
 
 
-
-
+# -------------------------------
+# Section 2: Read only the first line
+# -------------------------------
 
 # WAP (Write a Program) to open and read a file (one line)
 
@@ -26,6 +32,10 @@ print(f.readline())
 # Close the file after reading
 f.close()
 
+
+# -------------------------------
+# Section 3: Write data into a file
+# -------------------------------
 
 # WAP (Write a Program) to open a file and write data into it
 
@@ -42,7 +52,9 @@ print(f.write("Hello Manish 2"))
 f.close()
 
 
-
+# -------------------------------
+# Section 4: Write a list to a file, then read from another file
+# -------------------------------
 
 # WAP (Write a Program) to open a file and write a list, then read from another file
 
