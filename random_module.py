@@ -1,2 +1,29 @@
 import random
+
+# Generates a random float between 0 and 1
 print(random.random())
+
+# Generates a random integer between 1 and 100 (inclusive)
+print(random.randint(1, 100))
+
+# Generates a random number from range 1 to 9
+print(random.randrange(1, 10))
+
+# Generates a random odd number between 1 and 9
+print(random.randrange(1, 10, 2))
+
+# Randomly selects a character from the given string
+print(random.choice("hmp"))
+
+# Generates a number from range starting at 1 up to 99 with step 97
+print(random.randrange(1, 99, 97))
+
+# Randomly selects an element from the tuple
+print(random.choice((12, 25, 55, 78, 44)))
+
+# Shuffle works only on lists, not tuples
+numbers = [12, 25, 55, 78, 44]
+random.shuffle(numbers)
+
+# Prints the shuffled list
+print(numbers)
