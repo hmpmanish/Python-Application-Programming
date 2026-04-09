@@ -1,52 +1,40 @@
 import math
+
+# Returns the square root of 25
 print(math.sqrt(25))
 
-
-import math
+# Returns the value of π (pi)
 print(math.pi)
 
-
-import math
+# Returns the value of Euler's number (e)
 print(math.e)
 
+# Returns 2 raised to the power 4
+print(math.pow(2, 4))
 
-import math
-print(math.pow(2,4))
-
-
-import math
+# Converts 30 degrees into radians
 print(math.radians(30))
 
+# Converts π radians into degrees
+print(math.degrees(math.pi))
 
-import math
-print(math.degrees(math.pi)
-
-
-      import math
+# Returns sine of 30 radians (NOTE: input is in radians, not degrees)
 print(math.sin(30))
 
-
-import math
+# Returns natural logarithm (base e) of 10
 print(math.log(10))
 
-
-
-import math
+# Returns logarithm base 10 of 10
 print(math.log10(10))
 
-
-
-import math
+# Returns e raised to the power 10
 print(math.exp(10))
 
-
-import math
+# Rounds number UP to nearest integer
 print(math.ceil(4.5867))
 
-
-import math
+# Rounds number DOWN to nearest integer
 print(math.floor(4.5867))
 
-
-import math
+# Removes decimal part (truncates)
 print(math.trunc(12.32))
