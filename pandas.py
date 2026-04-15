@@ -42,6 +42,7 @@ myvar = pd.DataFrame(data)
 
 print(myvar)
 
+# --------  Indexed DataFrame --------
 
 import numpy as np
 import pandas as pd
