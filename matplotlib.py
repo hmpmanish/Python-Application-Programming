@@ -82,3 +82,19 @@ x= np.random.normal(170,10,250)
 
 plt.hist(x)
 plt.show()
+
+#histogram
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+
+data = np.random.normal(10000)
+
+
+
+plt.hist(data , bins =30 , color =skyblue  edgecolor black)
+plt.xlabel(value)
+pltyalanel(freq)
+plt.title(basic histgram)
+plt.show
