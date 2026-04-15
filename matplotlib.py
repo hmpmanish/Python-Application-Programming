@@ -83,18 +83,16 @@ x= np.random.normal(170,10,250)
 plt.hist(x)
 plt.show()
 
-#histogram
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Generate random data (mean=10000, std=100, size=1000)
+data = np.random.normal(1000)
 
+plt.hist(data, bins=30, color='skyblue', edgecolor='black')
 
-data = np.random.normal(10000)
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.title("Basic Histogram")
 
-
-
-plt.hist(data , bins =30 , color =skyblue  edgecolor black)
-plt.xlabel(value)
-pltyalanel(freq)
-plt.title(basic histgram)
-plt.show
+plt.show()
