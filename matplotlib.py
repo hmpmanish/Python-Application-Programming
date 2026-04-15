@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+# Example 1
 
 xpoints = np.array([1, 8])
 ypoints = np.array([3, 10])
@@ -8,6 +9,7 @@ plt.plot(xpoints, ypoints)
 plt.show()
 
 
+# Example 2 (markers only)
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,7 +22,7 @@ plt.show()
 
 
 
-# multi points 
+# Example 3 (multiple points)
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -31,7 +33,7 @@ plt.plot(xpoints, ypoints )
 plt.show()
 
 
-# defult x points 
+# Example 4 (default x)
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -40,3 +42,42 @@ ypoints = np.array([3,8 ,1 , 10])
 plt.plot(xpoints, ypoints )
 plt.show()
 
+
+# Example 5 (markers)
+import matplotlib.pyplot as plt
+import numpy as np
+
+ypoints = np.array([3,8 ,1 , 10])
+
+plt.plot(ypoints, marker ='*' )
+plt.show()
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+ypoints = np.array([3,8 ,1 , 10])
+
+plt.plot(ypoints, 'o:r' )
+plt.show()
+
+
+
+#line width
+# markers 
+import matplotlib.pyplot as plt
+import numpy as np
+
+ypoints = np.array([3,8 ,1 , 10])
+
+plt.plot(ypoints, linewidth = '20.5' )
+plt.show()
+
+
+#histogram
+import matplotlib.pyplot as plt
+import numpy as np
+
+x= np.random.normal(170,10,250)
+
+plt.hist(x)
+plt.show()
