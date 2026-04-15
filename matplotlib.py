@@ -99,3 +99,42 @@ plt.ylabel("Frequency")
 plt.title("Basic Histogram")
 
 plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#create bar
+#scatter plot
+#pie chart
+#subplot
+
+
