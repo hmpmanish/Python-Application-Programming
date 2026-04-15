@@ -51,6 +51,7 @@ ypoints = np.array([3,8 ,1 , 10])
 
 plt.plot(ypoints, marker ='*' )
 plt.show()
+# -------- Example 6: Format String --------
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -62,8 +63,8 @@ plt.show()
 
 
 
-#line width
-# markers 
+# -------- Example 7: Line Width --------
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -73,7 +74,7 @@ plt.plot(ypoints, linewidth = '20.5' )
 plt.show()
 
 
-#histogram
+# -------- Example 8: Histogram --------
 import matplotlib.pyplot as plt
 import numpy as np
 
