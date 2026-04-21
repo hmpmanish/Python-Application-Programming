@@ -10,4 +10,4 @@ f.close()
 print(content)
 
 f = open(r"C:\Users\Manish Pandey\Desktop\sample.txt", "a")
-f.write
+f.write("Appended line\n")
