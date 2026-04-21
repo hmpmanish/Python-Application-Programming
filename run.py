@@ -21,3 +21,4 @@ while True:
         print("No changes to push.")
     
     time.sleep(10)
+
