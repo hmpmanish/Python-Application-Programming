@@ -2326,5 +2326,140 @@ Current Interest (2%): Rs.2000.00</pre>
                 <div class="experiment-card" id="exp32">
                     <div class="exp-header" onclick="toggleExp(this)">
                         <div class="exp-num">32</div>
+<<<<<<< HEAD
                         <div class="exp
                         
+=======
+                        <div class="exp-title">Solve Linear Equations (NumPy linalg)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="callout info"><i class="fas fa-info-circle"></i><span>2x + 3y + z = 13, x - y + 2z = 7, 3x + 4y + z = 22</span></div>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+A = np.array([[<span class="nu">2</span>,<span class="nu">3</span>,<span class="nu">1</span>], [<span class="nu">1</span>,-<span class="nu">1</span>,<span class="nu">2</span>], [<span class="nu">3</span>,<span class="nu">4</span>,<span class="nu">1</span>]])
+B = np.array([<span class="nu">13</span>, <span class="nu">7</span>, <span class="nu">22</span>])
+
+solution = np.linalg.solve(A, B)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"x={solution[0]}, y={solution[1]}, z={solution[2]}"</span>)
+
+<span class="cm"># Verify</span>
+verification = np.dot(A, solution)
+<span class="nb">print</span>(<span class="st">"Verification:"</span>, verification)
+<span class="nb">print</span>(<span class="st">"Correct:"</span>, np.allclose(verification, B))
+
+<span class="cm"># Using inverse</span>
+solution2 = np.linalg.inv(A).dot(B)
+<span class="nb">print</span>(<span class="st">"Using inverse:"</span>, solution2)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>x=3.0, y=2.0, z=1.0
+Verification: [13.  7. 22.]
+Correct: True
+Using inverse: [3. 2. 1.]</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 33 -->
+                <div class="experiment-card" id="exp33">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">33</div>
+                        <div class="exp-title">Pandas Series Statistics</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+s = pd.Series([<span class="nu">85</span>, <span class="nu">92</span>, <span class="nu">78</span>, <span class="nu">95</span>, <span class="nu">88</span>, <span class="nu">76</span>, <span class="nu">90</span>, <span class="nu">82</span>, <span class="nu">94</span>, <span class="nu">87</span>], name=<span class="st">'Marks'</span>)
+<span class="nb">print</span>(s)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Mean: {s.mean():.2f}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Max: {s.max()}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Min: {s.min()}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Std: {s.std():.2f}"</span>)
+<span class="nb">print</span>(<span class="st">"\nDescribe:"</span>)
+<span class="nb">print</span>(s.describe())</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Mean: 86.70
+Max: 95
+Min: 76
+Std: 6.34
+
+Describe:
+count    10.000000
+mean     86.700000
+std       6.339395
+min      76.000000
+25%      82.250000
+50%      87.500000
+75%      91.500000
+max      95.000000</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 34 -->
+                <div class="experiment-card" id="exp34">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">34</div>
+                        <div class="exp-title">Pandas DataFrame Operations on student.csv</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+<span class="cm"># a. Load CSV</span>
+df = pd.read_csv(<span class="st">'student.csv'</span>)
+
+<span class="cm"># b. Rows and columns</span>
+<span class="nb">print</span>(<span class="st">"Shape:"</span>, df.shape)
+
+<span class="cm"># c. Last 5 rows</span>
+<span class="nb">print</span>(df.tail(<span class="nu">5</span>))
+
+<span class="cm"># d. Student with lowest marks</span>
+<span class="nb">print</span>(df.loc[df[<span class="st">'Marks'</span>].idxmin()])
+
+<span class="cm"># e. Total marks of females</span>
+<span class="nb">print</span>(<span class="st">"Female total:"</span>, df[df[<span class="st">'Gender'</span>]==<span class="st">'F'</span>][<span class="st">'Marks'</span>].sum())
+
+<span class="cm"># f. Male student names</span>
+<span class="nb">print</span>(<span class="st">"Males:"</span>, df[df[<span class="st">'Gender'</span>]==<span class="st">'M'</span>][<span class="st">'Name'</span>].tolist())
+
+<span class="cm"># g. Mean age</span>
+<span class="nb">print</span>(<span class="st">"Mean age:"</span>, df[<span class="st">'Age'</span>].mean())
+
+<span class="cm"># h. Line plot marks</span>
+plt.plot(df[<span class="st">'Name'</span>], df[<span class="st">'Marks'</span>], marker=<span class="st">'o'</span>)
+plt.xticks(rotation=<span class="nu">45</span>)
+plt.title(<span class="st">"Student Marks"</span>)
+plt.tight_layout()
+plt.show()
+
+<span class="cm"># i. Oldest student index</span>
+<span class="nb">print</span>(<span class="st">"Oldest idx:"</span>, df[
+>>>>>>> f82da6ee4030a47e4b695c9c1dcfe1a4c068c6e3
