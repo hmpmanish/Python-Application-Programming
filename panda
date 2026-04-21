@@ -1,0 +1,18 @@
+# -------- DataFrame example --------
+
+
+
+
+import pandas as pd
+
+mydataset = {
+    "Name": ["Manish", "Yash", "Atul"],
+    "System_ID": [2025066457453, 202564545, 6569544]
+}
+
+myvar = pd.DataFrame(mydataset)
+
+print(myvar)
+
+
+
