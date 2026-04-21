@@ -1,0 +1,2460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSCR1503 - Python Programming Lab Solutions, Notes & Cheat Sheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0a0e17;
+            --bg2: #0f1520;
+            --bg3: #151c2c;
+            --card: #131a2b;
+            --card-hover: #1a2340;
+            --border: #1e2d4a;
+            --border-light: #2a3f6a;
+            --fg: #e8edf5;
+            --fg-dim: #8892a8;
+            --fg-muted: #5a6580;
+            --accent: #00e5a0;
+            --accent2: #00c9ff;
+            --accent3: #ff6b6b;
+            --accent4: #ffd93d;
+            --accent5: #c084fc;
+            --code-bg: #0c1018;
+            --code-border: #1a2540;
+            --success: #00e5a0;
+            --warning: #ffd93d;
+            --error: #ff6b6b;
+            --info: #00c9ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-light) var(--bg);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* ===== BACKGROUND EFFECTS ===== */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow-1 { top: -200px; left: -200px; background: var(--accent); }
+        .bg-glow-2 { bottom: -200px; right: -200px; background: var(--accent2); }
+        .bg-glow-3 { top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--accent5); opacity: 0.06; }
+
+        /* ===== SIDEBAR NAV ===== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            overflow-y: auto;
+            transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .sidebar.collapsed { transform: translateX(-300px); }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(0,229,160,0.08), rgba(0,201,255,0.05));
+        }
+
+        .sidebar-header .course-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 4px;
+            color: var(--fg);
+        }
+
+        .sidebar-header .dept {
+            font-size: 11px;
+            color: var(--fg-muted);
+            margin-top: 2px;
+        }
+
+        .nav-section {
+            padding: 16px 12px 8px;
+        }
+
+        .nav-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--fg-muted);
+            padding: 0 8px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: var(--fg-dim);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 400;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(0,229,160,0.08);
+            color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: rgba(0,229,160,0.12);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .nav-item i { width: 18px; text-align: center; font-size: 12px; }
+
+        .nav-item .badge {
+            margin-left: auto;
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 10px;
+            background: rgba(0,229,160,0.15);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            margin-left: 300px;
+            position: relative;
+            z-index: 1;
+            transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .main.expanded { margin-left: 0; }
+
+        /* ===== TOP BAR ===== */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            background: rgba(10,14,23,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .toggle-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--fg-dim);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        .topbar-search {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .topbar-search input {
+            width: 100%;
+            padding: 8px 12px 8px 36px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg2);
+            color: var(--fg);
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .topbar-search input:focus { border-color: var(--accent); }
+        .topbar-search i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--fg-muted); font-size: 13px; }
+
+        .topbar-actions { margin-left: auto; display: flex; gap: 8px; }
+
+        .topbar-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--fg-dim);
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .topbar-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .topbar-btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+        .topbar-btn.primary:hover { background: #00cc8e; }
+
+        /* ===== CONTENT AREA ===== */
+        .content { padding: 32px; max-width: 1000px; }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: rgba(0,229,160,0.1);
+            border: 1px solid rgba(0,229,160,0.2);
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--fg), var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 17px;
+            color: var(--fg-dim);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat .num {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        .hero-stat .label {
+            font-size: 12px;
+            color: var(--fg-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== TABS ===== */
+        .tabs-container {
+            position: sticky;
+            top: 61px;
+            z-index: 80;
+            background: rgba(10,14,23,0.9);
+            backdrop-filter: blur(20px);
+            padding: 12px 0;
+            margin-bottom: 32px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .tab {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--fg-dim);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            background: transparent;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .tab:hover { color: var(--fg); background: var(--bg3); }
+        .tab.active { background: rgba(0,229,160,0.12); color: var(--accent); border-color: rgba(0,229,160,0.25); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeUp 0.35s ease; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 48px 0 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .section-icon.green { background: rgba(0,229,160,0.12); color: var(--accent); }
+        .section-icon.blue { background: rgba(0,201,255,0.12); color: var(--accent2); }
+        .section-icon.red { background: rgba(255,107,107,0.12); color: var(--accent3); }
+        .section-icon.yellow { background: rgba(255,217,61,0.12); color: var(--accent4); }
+        .section-icon.purple { background: rgba(192,132,252,0.12); color: var(--accent5); }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .section-header .co-tag {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(0,229,160,0.1);
+            color: var(--accent);
+            border: 1px solid rgba(0,229,160,0.2);
+        }
+
+        /* ===== EXPERIMENT CARDS ===== */
+        .experiment-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .experiment-card:hover { border-color: var(--border-light); }
+
+        .exp-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .exp-num {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(0,229,160,0.15), rgba(0,201,255,0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .exp-title {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .exp-toggle {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--bg3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--fg-muted);
+            font-size: 11px;
+            transition: all 0.3s;
+        }
+
+        .experiment-card.open .exp-toggle { transform: rotate(180deg); color: var(--accent); }
+
+        .exp-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .experiment-card.open .exp-body { max-height: 5000px; }
+
+        .exp-content { padding: 0 24px 24px; }
+
+        /* ===== CODE BLOCKS ===== */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 10px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--code-border);
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-btn {
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--fg-muted);
+            font-size: 11px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+        .code-block pre {
+            padding: 16px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            line-height: 1.65;
+            color: #c9d1d9;
+            tab-size: 4;
+        }
+
+        /* Syntax highlighting */
+        .kw { color: #ff7b72; }      /* keywords */
+        .fn { color: #d2a8ff; }      /* functions */
+        .st { color: #a5d6ff; }      /* strings */
+        .cm { color: #5a6580; font-style: italic; }  /* comments */
+        .nb { color: #79c0ff; }      /* built-ins */
+        .nu { color: #ffa657; }      /* numbers */
+        .op { color: #ff7b72; }      /* operators */
+        .dc { color: #ffa657; }      /* decorators */
+        .se { color: #8b949e; }      /* self */
+
+        /* ===== OUTPUT BLOCKS ===== */
+        .output-block {
+            background: #0d1117;
+            border: 1px solid #1a2540;
+            border-radius: 10px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+
+        .output-header {
+            padding: 8px 16px;
+            background: rgba(0,229,160,0.06);
+            border-bottom: 1px solid #1a2540;
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .output-block pre {
+            padding: 14px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #8b949e;
+            white-space: pre-wrap;
+        }
+
+        /* ===== NOTES CARDS ===== */
+        .note-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .note-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .note-card h3 i { color: var(--accent); font-size: 16px; }
+
+        .note-card p { color: var(--fg-dim); margin-bottom: 12px; font-size: 14px; }
+
+        /* ===== TABLES ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead { background: var(--bg3); }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--fg-dim);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--fg-dim);
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(0,229,160,0.03); }
+
+        code:not(pre code) {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0,229,160,0.1);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* ===== CHEAT SHEET GRID ===== */
+        .cheat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .cheat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .cheat-card:hover { border-color: var(--border-light); transform: translateY(-2px); }
+
+        .cheat-card-header {
+            padding: 14px 18px;
+            background: var(--bg3);
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cheat-card-header i { color: var(--accent); font-size: 14px; }
+
+        .cheat-card-body {
+            padding: 16px 18px;
+        }
+
+        .cheat-card-body pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            line-height: 1.6;
+            color: #c9d1d9;
+            white-space: pre-wrap;
+        }
+
+        /* ===== CALLOUT BOXES ===== */
+        .callout {
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin: 16px 0;
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .callout i { margin-top: 2px; font-size: 14px; flex-shrink: 0; }
+
+        .callout.tip { background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2); color: var(--accent); }
+        .callout.tip i { color: var(--accent); }
+        .callout.warning { background: rgba(255,217,61,0.08); border: 1px solid rgba(255,217,61,0.2); color: var(--warning); }
+        .callout.warning i { color: var(--warning); }
+        .callout.error { background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); color: var(--error); }
+        .callout.error i { color: var(--error); }
+        .callout.info { background: rgba(0,201,255,0.08); border: 1px solid rgba(0,201,255,0.2); color: var(--info); }
+        .callout.info i { color: var(--info); }
+
+        /* ===== PAGINATION / PROGRESS ===== */
+        .week-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 40px 0 24px;
+        }
+
+        .week-divider .line { flex: 1; height: 1px; background: var(--border); }
+
+        .week-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(0,229,160,0.12), rgba(0,201,255,0.08));
+            color: var(--accent);
+            border: 1px solid rgba(0,229,160,0.2);
+        }
+
+        /* ===== CO MAPPING ===== */
+        .co-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .co-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            font-size: 12px;
+        }
+
+        .co-item .co-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+
+        .co-item .co-text { color: var(--fg-dim); font-size: 11px; line-height: 1.5; }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 60px;
+            padding: 32px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--fg-muted);
+            font-size: 13px;
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .sidebar, .topbar, .tabs-container, .toggle-btn, .copy-btn, .bg-grid, .bg-glow { display: none !important; }
+            .main { margin-left: 0 !important; }
+            .content { padding: 16px; max-width: 100%; }
+            .experiment-card { break-inside: avoid; page-break-inside: avoid; }
+            .exp-body { max-height: none !important; }
+            body { background: white; color: #1a1a1a; }
+            .code-block, .output-block { border: 1px solid #ddd; background: #f8f8f8; }
+            .code-block pre, .output-block pre { color: #333; }
+            .note-card, .cheat-card { background: #f9f9f9; border-color: #ddd; }
+            .section-header { border-color: #ddd; }
+            .section-header h2 { color: #1a1a1a; }
+            .hero h1 { -webkit-text-fill-color: #1a1a1a; background: none; }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-300px); }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .main { margin-left: 0 !important; }
+            .hero h1 { font-size: 32px; }
+            .content { padding: 20px; }
+            .cheat-grid { grid-template-columns: 1fr; }
+            .co-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 26px; }
+            .hero-stats { gap: 20px; }
+            .hero-stat .num { font-size: 24px; }
+            .tabs { gap: 2px; }
+            .tab { padding: 6px 12px; font-size: 12px; }
+            .co-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            background: var(--card);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* ===== SEARCH HIGHLIGHT ===== */
+        .search-highlight { background: rgba(255,217,61,0.3); border-radius: 2px; }
+
+        /* Mobile sidebar overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+        }
+
+        .sidebar-overlay.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Background effects -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Sidebar overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="course-code">CSCR1503</div>
+            <h2>Python Lab Manual</h2>
+            <div class="dept">Dept. of CSE | Term 2502</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a class="nav-item active" data-section="hero" onclick="scrollToSection('hero')">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a class="nav-item" data-section="co-map" onclick="scrollToSection('co-map')">
+                <i class="fas fa-bullseye"></i> Course Outcomes
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Solutions (40 Experiments)</div>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week1')">
+                <i class="fas fa-code"></i> Week 1 - Basics <span class="badge">1-3</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week2')">
+                <i class="fas fa-code-branch"></i> Week 2 - Conditionals <span class="badge">4-6</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week3')">
+                <i class="fas fa-sync"></i> Week 3 - Loops <span class="badge">7-9</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week4')">
+                <i class="fas fa-list"></i> Week 4 - Lists <span class="badge">10-12</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week5')">
+                <i class="fas fa-sort"></i> Week 5 - Tuples <span class="badge">13-15</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week6')">
+                <i class="fas fa-font"></i> Week 6 - Strings <span class="badge">16-18</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week7')">
+                <i class="fas fa-book"></i> Week 7 - Dicts <span class="badge">19-21</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week8')">
+                <i class="fas fa-lambda"></i> Week 8 - Functions <span class="badge">22-24</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week9')">
+                <i class="fas fa-exclamation-triangle"></i> Week 9 - Exceptions <span class="badge">25-28</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week10')">
+                <i class="fas fa-cubes"></i> Week 10 - OOP <span class="badge">29-31</span>
+            </a>
+            <a class="nav-item" onclick="switchTab('solutions');scrollToSection('week11')">
+                <i class="fas fa-table"></i> Week 11-13 - NumPy/Pandas <span class="badge">32-40</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Study Material</div>
+            <a class="nav-item" onclick="switchTab('notes')">
+                <i class="fas fa-sticky-note"></i> Notes
+            </a>
+            <a class="nav-item" onclick="switchTab('cheatsheet')">
+                <i class="fas fa-bolt"></i> Cheat Sheet
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main" id="main">
+        <!-- Top Bar -->
+        <div class="topbar">
+            <button class="toggle-btn" id="toggleSidebar" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="topbar-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search experiments, topics..." id="searchInput" oninput="handleSearch(this.value)">
+            </div>
+            <div class="topbar-actions">
+                <button class="topbar-btn" onclick="expandAll()">
+                    <i class="fas fa-expand-alt"></i> Expand All
+                </button>
+                <button class="topbar-btn" onclick="collapseAll()">
+                    <i class="fas fa-compress-alt"></i> Collapse
+                </button>
+                <button class="topbar-btn primary" onclick="window.print()">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- HERO SECTION -->
+            <section class="hero" id="hero">
+                <div class="hero-badge">
+                    <i class="fas fa-graduation-cap"></i> Term 2502 | Department of CSE
+                </div>
+                <h1>Application Based<br>Programming in Python</h1>
+                <p>Complete lab solutions, comprehensive notes, and quick-reference cheat sheet for all 40 experiments.</p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="num">40</div>
+                        <div class="label">Experiments</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="num">6</div>
+                        <div class="label">Course Outcomes</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="num">13</div>
+                        <div class="label">Weeks</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="num">0 1 4</div>
+                        <div class="label">L T P Credits</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CO MAPPING -->
+            <section id="co-map" style="margin-bottom:40px;">
+                <div class="section-header">
+                    <div class="section-icon green"><i class="fas fa-bullseye"></i></div>
+                    <h2>Course Outcomes</h2>
+                </div>
+                <div class="co-grid">
+                    <div class="co-item"><div class="co-label">CO1</div><div class="co-text">Variables, data types, operators, conditionals, loops</div></div>
+                    <div class="co-item"><div class="co-label">CO2</div><div class="co-text">Lists, tuples, strings, sets, dictionaries</div></div>
+                    <div class="co-item"><div class="co-label">CO3</div><div class="co-text">Functions, lambda, recursion, exception handling</div></div>
+                    <div class="co-item"><div class="co-label">CO4</div><div class="co-text">Classes, inheritance, encapsulation, polymorphism</div></div>
+                    <div class="co-item"><div class="co-label">CO5</div><div class="co-text">File handling, NumPy, Pandas, Matplotlib</div></div>
+                    <div class="co-item"><div class="co-label">CO6</div><div class="co-text">Application-based solutions, searching, sorting, visualization</div></div>
+                </div>
+            </section>
+
+            <!-- TABS -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab active" data-tab="solutions" onclick="switchTab('solutions')"><i class="fas fa-code"></i>&nbsp; Solutions</button>
+                    <button class="tab" data-tab="notes" onclick="switchTab('notes')"><i class="fas fa-sticky-note"></i>&nbsp; Notes</button>
+                    <button class="tab" data-tab="cheatsheet" onclick="switchTab('cheatsheet')"><i class="fas fa-bolt"></i>&nbsp; Cheat Sheet</button>
+                </div>
+            </div>
+
+            <!-- ==================== SOLUTIONS TAB ==================== -->
+            <div class="tab-content active" id="tab-solutions">
+
+                <!-- WEEK 1 -->
+                <div class="week-divider" id="week1">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 1 &mdash; CO1</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 1 -->
+                <div class="experiment-card" id="exp1">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">01</div>
+                        <div class="exp-title">Arithmetic Operations with Data Types</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <p style="color:var(--fg-dim);font-size:14px;margin-bottom:14px;">Accept two numbers, print sum, difference, product, quotient, remainder and their datatypes.</p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="cm"># Experiment 1: Arithmetic Operations with Data Types</span>
+num1 = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Enter first number: "</span>))
+num2 = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Enter second number: "</span>))
+
+sum_res = num1 + num2
+diff_res = num1 - num2
+prod_res = num1 * num2
+
+<span class="kw">if</span> num2 != <span class="nu">0</span>:
+    quot_res = num1 / num2
+    rem_res = num1 % num2
+<span class="kw">else</span>:
+    quot_res = <span class="st">"Undefined"</span>
+    rem_res = <span class="st">"Undefined"</span>
+
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Operation':&lt;12} {'Result':&lt;20} {'Datatype'}"</span>)
+<span class="nb">print</span>(<span class="st">"-"</span> * <span class="nu">50</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Sum':&lt;12} {sum_res:&lt;20} {<span class="nb">type</span>(sum_res)}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Difference':&lt;12} {diff_res:&lt;20} {<span class="nb">type</span>(diff_res)}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Product':&lt;12} {prod_res:&lt;20} {<span class="nb">type</span>(prod_res)}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Quotient':&lt;12} {quot_res:&lt;20} {<span class="nb">type</span>(quot_res)}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Remainder':&lt;12} {rem_res:&lt;20} {<span class="nb">type</span>(rem_res)}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter first number: 10
+Enter second number: 3
+--------------------------------------------------
+Sum          13.0                 &lt;class 'float'&gt;
+Difference   7.0                  &lt;class 'float'&gt;
+Product      30.0                 &lt;class 'float'&gt;
+Quotient     3.3333333333333335   &lt;class 'float'&gt;
+Remainder    1.0                  &lt;class 'float'&gt;</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 2 -->
+                <div class="experiment-card" id="exp2">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">02</div>
+                        <div class="exp-title">Swapping Two Numbers (With & Without Intermediate Variable)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>a = <span class="nb">int</span>(<span class="nb">input</span>(<span class="st">"Enter a: "</span>))
+b = <span class="nb">int</span>(<span class="nb">input</span>(<span class="st">"Enter b: "</span>))
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Original: a={a}, b={b}"</span>)
+
+<span class="cm"># Method a) Using intermediate variable</span>
+temp = a
+a = b
+b = temp
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Method a: a={a}, b={b}"</span>)
+
+<span class="cm"># Reset</span>
+a, b = b, a
+
+<span class="cm"># Method b) Without intermediate variable (tuple unpacking)</span>
+a, b = b, a
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Method b: a={a}, b={b}"</span>)
+
+<span class="cm"># Method c) Using arithmetic</span>
+a, b = b, a  <span class="cm"># reset</span>
+a = a + b
+b = a - b
+a = a - b
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Method c: a={a}, b={b}"</span>)
+
+<span class="cm"># Method d) Using XOR (integers only)</span>
+a, b = b, a
+a = a ^ b; b = a ^ b; a = a ^ b
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Method d (XOR): a={a}, b={b}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter a: 10
+Enter b: 20
+Original: a=10, b=20
+Method a: a=20, b=10
+Method b: a=10, b=20
+Method c: a=20, b=10
+Method d (XOR): a=10, b=20</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 3 -->
+                <div class="experiment-card" id="exp3">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">03</div>
+                        <div class="exp-title">Distance Between Two Points</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="callout info"><i class="fas fa-info-circle"></i><span>Formula: d = &radic;((x2-x1)&sup2; + (y2-y1)&sup2;)</span></div>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">import</span> math
+
+x1 = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Enter x1: "</span>))
+y1 = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Enter y1: "</span>))
+x2 = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Enter x2: "</span>))
+y2 = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Enter y2: "</span>))
+
+distance = math.sqrt((x2 - x1)**<span class="nu">2</span> + (y2 - y1)**<span class="nu">2</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Distance: {distance:.4f} units"</span>)
+
+<span class="cm"># Alternative using math.hypot</span>
+distance2 = math.hypot(x2 - x1, y2 - y1)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Using hypot: {distance2:.4f} units"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter x1: 0
+Enter y1: 0
+Enter x2: 3
+Enter y2: 4
+Distance: 5.0000 units
+Using hypot: 5.0000 units</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 2 -->
+                <div class="week-divider" id="week2">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 2 &mdash; CO1</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 4 -->
+                <div class="experiment-card" id="exp4">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">04</div>
+                        <div class="exp-title">Positive, Negative or Zero Checker</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>num = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Enter a number: "</span>))
+
+<span class="kw">if</span> num > <span class="nu">0</span>:
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{num} is POSITIVE"</span>)
+<span class="kw">elif</span> num &lt; <span class="nu">0</span>:
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{num} is NEGATIVE"</span>)
+<span class="kw">else</span>:
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{num} is ZERO"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter a number: -5
+-5.0 is NEGATIVE</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 5 -->
+                <div class="experiment-card" id="exp5">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">05</div>
+                        <div class="exp-title">ATM Note Dispenser (2000, 500, 200, 100)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>notes = [<span class="nu">2000</span>, <span class="nu">500</span>, <span class="nu">200</span>, <span class="nu">100</span>]
+amount = <span class="nb">int</span>(<span class="nb">input</span>(<span class="st">"Enter amount: "</span>))
+
+<span class="kw">if</span> amount % <span class="nu">100</span> != <span class="nu">0</span> <span class="kw">or</span> amount &lt;= <span class="nu">0</span>:
+    <span class="nb">print</span>(<span class="st">"Invalid amount!"</span>)
+<span class="kw">else</span>:
+    total_notes = <span class="nu">0</span>
+    remaining = amount
+    <span class="nb">print</span>(<span class="st">"DISPENSING NOTES:"</span>)
+    <span class="kw">for</span> note <span class="kw">in</span> notes:
+        <span class="kw">if</span> remaining >= note:
+            count = remaining // note
+            remaining = remaining % note
+            <span class="nb">print</span>(<span class="nb">f</span><span class="st">"  Rs.{note}: {count} notes"</span>)
+            total_notes += count
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"Total notes: {total_notes}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter amount: 4800
+DISPENSING NOTES:
+  Rs.2000: 2 notes
+  Rs.500: 1 notes
+  Rs.200: 1 notes
+  Rs.100: 1 notes
+Total notes: 5</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 6 -->
+                <div class="experiment-card" id="exp6">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">06</div>
+                        <div class="exp-title">Binary Digit Flip (Make All Same)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="callout tip"><i class="fas fa-lightbulb"></i><span>Print YES if exactly one 0 or one 1 exists (flip it to match all others). Otherwise NO.</span></div>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>binary_str = <span class="nb">input</span>(<span class="st">"Enter binary string: "</span>)
+
+count_0 = binary_str.count(<span class="st">'0'</span>)
+count_1 = binary_str.count(<span class="st">'1'</span>)
+
+<span class="kw">if</span> count_0 == <span class="nu">1</span> <span class="kw">or</span> count_1 == <span class="nu">1</span>:
+    <span class="nb">print</span>(<span class="st">"YES"</span>)
+<span class="kw">else</span>:
+    <span class="nb">print</span>(<span class="st">"NO"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter binary string: 110
+YES</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 3 -->
+                <div class="week-divider" id="week3">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 3 &mdash; CO1</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 7 -->
+                <div class="experiment-card" id="exp7">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">07</div>
+                        <div class="exp-title">Leap Year Checker</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>year = <span class="nb">int</span>(<span class="nb">input</span>(<span class="st">"Enter year: "</span>))
+
+<span class="kw">if</span> (year % <span class="nu">400</span> == <span class="nu">0</span>) <span class="kw">or</span> (year % <span class="nu">100</span> != <span class="nu">0</span> <span class="kw">and</span> year % <span class="nu">4</span> == <span class="nu">0</span>):
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{year} is a LEAP YEAR"</span>)
+<span class="kw">else</span>:
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{year} is NOT a leap year"</span>)
+
+<span class="cm"># Short version</span>
+is_leap = year % <span class="nu">4</span> == <span class="nu">0</span> <span class="kw">and</span> (year % <span class="nu">100</span> != <span class="nu">0</span> <span class="kw">or</span> year % <span class="nu">400</span> == <span class="nu">0</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter year: 2024
+2024 is a LEAP YEAR</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 8 -->
+                <div class="experiment-card" id="exp8">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">08</div>
+                        <div class="exp-title">Even Numbers 1 to 100 with Count</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="cm"># Using range with step 2</span>
+evens = <span class="nb">list</span>(<span class="nb">range</span>(<span class="nu">2</span>, <span class="nu">101</span>, <span class="nu">2</span>))
+<span class="kw">for</span> i, num <span class="kw">in</span> <span class="nb">enumerate</span>(evens, <span class="nu">1</span>):
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{num:4}"</span>, end=<span class="st">" "</span>)
+    <span class="kw">if</span> i % <span class="nu">10</span> == <span class="nu">0</span>:
+        <span class="nb">print</span>()
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"\nTotal even numbers: {<span class="nb">len</span>(evens)}"</span>)
+<span class="cm"># Formula: 100 // 2 = 50</span></pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>   2    4    6    8   10   12   14   16   18   20 
+  22   24   26   28   30   32   34   36   38   40 
+  42   44   46   48   50   52   54   56   58   60 
+  62   64   66   68   70   72   74   76   78   80 
+  82   84   86   88   90   92   94   96   98  100 
+Total even numbers: 50</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 9 -->
+                <div class="experiment-card" id="exp9">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">09</div>
+                        <div class="exp-title">Password Validation System (3 Attempts)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>correct_password = <span class="st">"python123"</span>
+max_attempts = <span class="nu">3</span>
+
+<span class="kw">for</span> attempt <span class="kw">in</span> <span class="nb">range</span>(<span class="nu">1</span>, max_attempts + <span class="nu">1</span>):
+    pwd = <span class="nb">input</span>(<span class="nb">f</span><span class="st">"Attempt {attempt}: Enter password: "</span>)
+    <span class="kw">if</span> pwd == correct_password:
+        <span class="nb">print</span>(<span class="st">"ACCESS GRANTED!"</span>)
+        <span class="kw">break</span>
+    <span class="kw">else</span>:
+        remaining = max_attempts - attempt
+        <span class="kw">if</span> remaining > <span class="nu">0</span>:
+            <span class="nb">print</span>(<span class="nb">f</span><span class="st">"Wrong! {remaining} attempt(s) left."</span>)
+<span class="kw">else</span>:
+    <span class="nb">print</span>(<span class="st">"ACCESS DENIED! Account locked."</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Attempt 1: Enter password: wrong
+Wrong! 2 attempt(s) left.
+Attempt 2: Enter password: python123
+ACCESS GRANTED!</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 4 -->
+                <div class="week-divider" id="week4">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 4 &mdash; CO2</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 10 -->
+                <div class="experiment-card" id="exp10">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">10</div>
+                        <div class="exp-title">Concatenate Lists & Element-wise Multiply by 3</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>list1 = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>]
+list2 = [<span class="nu">5</span>, <span class="nu">6</span>, <span class="nu">7</span>, <span class="nu">8</span>]
+
+<span class="cm"># Concatenation</span>
+concatenated = list1 + list2
+<span class="nb">print</span>(<span class="st">"Concatenated:"</span>, concatenated)
+
+<span class="cm"># Element-wise multiplication by 3</span>
+result = [x * <span class="nu">3</span> <span class="kw">for</span> x <span class="kw">in</span> concatenated]
+<span class="nb">print</span>(<span class="st">"After *3:"</span>, result)
+
+<span class="cm"># Using map + lambda</span>
+result2 = <span class="nb">list</span>(<span class="nb">map</span>(<span class="kw">lambda</span> x: x * <span class="nu">3</span>, concatenated))
+<span class="nb">print</span>(<span class="st">"Using map:"</span>, result2)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Concatenated: [1, 2, 3, 4, 5, 6, 7, 8]
+After *3: [3, 6, 9, 12, 15, 18, 21, 24]
+Using map: [3, 6, 9, 12, 15, 18, 21, 24]</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 11 -->
+                <div class="experiment-card" id="exp11">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">11</div>
+                        <div class="exp-title">Grocery Item Count & Most Occurring</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>L = [<span class="st">"pen"</span>, <span class="st">"ball"</span>, <span class="st">"eraser"</span>, <span class="st">"pen"</span>, <span class="st">"band"</span>, <span class="st">"pen"</span>, <span class="st">"Pencil"</span>, <span class="st">"ball"</span>]
+
+<span class="cm"># Method 1: Using dictionary</span>
+item_count = {}
+<span class="kw">for</span> item <span class="kw">in</span> L:
+    item_count[item] = item_count.get(item, <span class="nu">0</span>) + <span class="nu">1</span>
+
+<span class="nb">print</span>(<span class="st">"Item counts:"</span>)
+<span class="kw">for</span> item, count <span class="kw">in</span> item_count.items():
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"  {item}: {count}"</span>)
+
+<span class="cm"># Most occurring</span>
+max_count = <span class="nb">max</span>(item_count.values())
+most_occurring = [item <span class="kw">for</span> item, c <span class="kw">in</span> item_count.items() <span class="kw">if</span> c == max_count]
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Most occurring: {most_occurring[0]} ({max_count} times)"</span>)
+
+<span class="cm"># Method 2: Using Counter</span>
+<span class="kw">from</span> collections <span class="kw">import</span> Counter
+<span class="nb">print</span>(<span class="st">"Most common:"</span>, Counter(L).most_common(<span class="nu">1</span>)[<span class="nu">0</span>])</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Item counts:
+  pen: 3
+  ball: 2
+  eraser: 1
+  band: 1
+  Pencil: 1
+Most occurring: pen (3 times)
+Most common: ('pen', 3)</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 12 -->
+                <div class="experiment-card" id="exp12">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">12</div>
+                        <div class="exp-title">Extract Last Element from Nested List</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>nested = [[<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>], [<span class="nu">5</span>, <span class="nu">6</span>], [<span class="nu">7</span>, <span class="nu">8</span>, <span class="nu">9</span>], [<span class="nu">10</span>], [<span class="nu">11</span>, <span class="nu">12</span>, <span class="nu">13</span>, <span class="nu">14</span>, <span class="nu">15</span>]]
+
+<span class="cm"># List comprehension with negative indexing</span>
+last_elements = [inner[-<span class="nu">1</span>] <span class="kw">for</span> inner <span class="kw">in</span> nested]
+<span class="nb">print</span>(<span class="st">"Last elements:"</span>, last_elements)
+
+<span class="cm"># Using map + lambda</span>
+last_elements2 = <span class="nb">list</span>(<span class="nb">map</span>(<span class="kw">lambda</span> x: x[-<span class="nu">1</span>], nested))
+<span class="nb">print</span>(<span class="st">"Using map:"</span>, last_elements2)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Last elements: [4, 6, 9, 10, 15]
+Using map: [4, 6, 9, 10, 15]</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 5 -->
+                <div class="week-divider" id="week5">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 5 &mdash; CO2</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 13 -->
+                <div class="experiment-card" id="exp13">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">13</div>
+                        <div class="exp-title">Sort Books by Publication Year</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>books = [
+    (<span class="st">"Python Crash Course"</span>, <span class="st">"Eric Matthes"</span>, <span class="nu">2015</span>),
+    (<span class="st">"Clean Code"</span>, <span class="st">"Robert Martin"</span>, <span class="nu">2008</span>),
+    (<span class="st">"Deep Learning"</span>, <span class="st">"Ian Goodfellow"</span>, <span class="nu">2016</span>),
+    (<span class="st">"Algorithms"</span>, <span class="st">"Thomas Cormen"</span>, <span class="nu">2009</span>),
+    (<span class="st">"Fluent Python"</span>, <span class="st">"Luciano Ramalho"</span>, <span class="nu">2015</span>)
+]
+
+<span class="cm"># Sort by year (index 2) ascending</span>
+sorted_books = <span class="nb">sorted</span>(books, key=<span class="kw">lambda</span> x: x[<span class="nu">2</span>])
+
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Title':&lt;30} {'Author':&lt;20} {'Year'}"</span>)
+<span class="nb">print</span>(<span class="st">"-"</span> * <span class="nu">65</span>)
+<span class="kw">for</span> title, author, year <span class="kw">in</span> sorted_books:
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{title:&lt;30} {author:&lt;20} {year}"</span>)
+
+<span class="cm"># Using itemgetter</span>
+<span class="kw">from</span> operator <span class="kw">import</span> itemgetter
+sorted_books2 = <span class="nb">sorted</span>(books, key=itemgetter(<span class="nu">2</span>))</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Title                          Author               Year
+-----------------------------------------------------------------
+Clean Code                     Robert Martin         2008
+Algorithms                     Thomas Cormen         2009
+Python Crash Course            Eric Matthes          2015
+Fluent Python                  Luciano Ramalho       2015
+Deep Learning                  Ian Goodfellow        2016</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 14 -->
+                <div class="experiment-card" id="exp14">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">14</div>
+                        <div class="exp-title">Sort Students by Grade (Descending)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>students = (
+    (<span class="st">"Alice"</span>, <span class="nu">20</span>, <span class="st">"A"</span>),
+    (<span class="st">"Bob"</span>, <span class="nu">21</span>, <span class="st">"C"</span>),
+    (<span class="st">"Charlie"</span>, <span class="nu">19</span>, <span class="st">"B"</span>),
+    (<span class="st">"Diana"</span>, <span class="nu">22</span>, <span class="st">"A"</span>),
+    (<span class="st">"Eve"</span>, <span class="nu">20</span>, <span class="st">"B"</span>),
+    (<span class="st">"Frank"</span>, <span class="nu">21</span>, <span class="st">"D"</span>)
+)
+
+grade_order = {<span class="st">'A'</span>: <span class="nu">1</span>, <span class="st">'B'</span>: <span class="nu">2</span>, <span class="st">'C'</span>: <span class="nu">3</span>, <span class="st">'D'</span>: <span class="nu">4</span>, <span class="st">'F'</span>: <span class="nu">5</span>}
+sorted_students = <span class="nb">sorted</span>(<span class="nb">list</span>(students), key=<span class="kw">lambda</span> x: grade_order[x[<span class="nu">2</span>]])
+
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Name':&lt;15} {'Age':&lt;8} {'Grade'}"</span>)
+<span class="nb">print</span>(<span class="st">"-"</span> * <span class="nu">35</span>)
+<span class="kw">for</span> name, age, grade <span class="kw">in</span> sorted_students:
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{name:&lt;15} {age:&lt;8} {grade}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Name            Age      Grade
+-----------------------------------
+Alice           20       A
+Diana           22       A
+Charlie         19       B
+Eve             20       B
+Bob             21       C
+Frank           21       D</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 15 -->
+                <div class="experiment-card" id="exp15">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">15</div>
+                        <div class="exp-title">Sort Grocery Items by Price</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>price = [(<span class="st">'item1'</span>, <span class="st">'17.20'</span>), (<span class="st">'item2'</span>, <span class="st">'15.10'</span>), (<span class="st">'item3'</span>, <span class="st">'24.5'</span>)]
+
+sorted_price = <span class="nb">sorted</span>(price, key=<span class="kw">lambda</span> x: <span class="nb">float</span>(x[<span class="nu">1</span>]))
+<span class="nb">print</span>(<span class="st">"Ascending:"</span>, sorted_price)
+
+sorted_desc = <span class="nb">sorted</span>(price, key=<span class="kw">lambda</span> x: <span class="nb">float</span>(x[<span class="nu">1</span>]), reverse=<span class="kw">True</span>)
+<span class="nb">print</span>(<span class="st">"Descending:"</span>, sorted_desc)
+
+<span class="cm"># Second costliest</span>
+second_costliest = sorted_desc[<span class="nu">1</span>]
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Second costliest: {second_costliest[0]} at Rs.{second_costliest[1]}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Ascending: [('item2', '15.10'), ('item1', '17.20'), ('item3', '24.5')]
+Descending: [('item3', '24.5'), ('item1', '17.20'), ('item2', '15.10')]
+Second costliest: item1 at Rs.17.20</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 6 -->
+                <div class="week-divider" id="week6">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 6 &mdash; CO2</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 16 -->
+                <div class="experiment-card" id="exp16">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">16</div>
+                        <div class="exp-title">Reverse Each Word in a String</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>s = <span class="nb">input</span>(<span class="st">"Enter string: "</span>)
+
+<span class="cm"># List comprehension with slicing [::-1]</span>
+result = <span class="st">' '</span>.join([word[::-<span class="nu">1</span>] <span class="kw">for</span> word <span class="kw">in</span> s.split()])
+<span class="nb">print</span>(<span class="st">"Reversed words:"</span>, result)
+
+<span class="cm"># Using map + lambda</span>
+result2 = <span class="st">' '</span>.join(<span class="nb">map</span>(<span class="kw">lambda</span> x: x[::-<span class="nu">1</span>], s.split()))
+<span class="nb">print</span>(<span class="st">"Using map:"</span>, result2)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter string: Hello World Python
+Reversed words: olleH dlroW nohtyP
+Using map: olleH dlroW nohtyP</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 17 -->
+                <div class="experiment-card" id="exp17">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">17</div>
+                        <div class="exp-title">Filter Strings > 5 Chars & Reverse Them</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>strings = [<span class="st">"hello"</span>, <span class="st">"world"</span>, <span class="st">"python"</span>, <span class="st">"is"</span>, <span class="st">"awesome"</span>, <span class="st">"code"</span>, <span class="st">"programming"</span>]
+
+<span class="cm"># Filter + reverse in one comprehension</span>
+result = [s[::-<span class="nu">1</span>] <span class="kw">for</span> s <span class="kw">in</span> strings <span class="kw">if</span> <span class="nb">len</span>(s) > <span class="nu">5</span>]
+<span class="nb">print</span>(<span class="st">"Result:"</span>, result)
+
+<span class="cm"># Using filter + map</span>
+filtered = <span class="nb">filter</span>(<span class="kw">lambda</span> x: <span class="nb">len</span>(x) > <span class="nu">5</span>, strings)
+result2 = <span class="nb">list</span>(<span class="nb">map</span>(<span class="kw">lambda</span> x: x[::-<span class="nu">1</span>], filtered))
+<span class="nb">print</span>(<span class="st">"Using filter+map:"</span>, result2)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Result: ['nohtyp', 'emosewa', 'gnimmargorp']
+Using filter+map: ['nohtyp', 'emosewa', 'gnimmargorp']</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 18 -->
+                <div class="experiment-card" id="exp18">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">18</div>
+                        <div class="exp-title">Password Strength Checker</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>pwd = <span class="nb">input</span>(<span class="st">"Enter password: "</span>)
+special = <span class="st">"!@#$%^&amp;*"</span>
+
+checks = {
+    <span class="st">"Length (&gt;=8)"</span>: <span class="nb">len</span>(pwd) >= <span class="nu">8</span>,
+    <span class="st">"Uppercase"</span>: <span class="kw">any</span>(c.isupper() <span class="kw">for</span> c <span class="kw">in</span> pwd),
+    <span class="st">"Lowercase"</span>: <span class="kw">any</span>(c.islower() <span class="kw">for</span> c <span class="kw">in</span> pwd),
+    <span class="st">"Digit"</span>: <span class="kw">any</span>(c.isdigit() <span class="kw">for</span> c <span class="kw">in</span> pwd),
+    <span class="st">"Special char"</span>: <span class="kw">any</span>(c <span class="kw">in</span> special <span class="kw">for</span> c <span class="kw">in</span> pwd)
+}
+
+<span class="kw">for</span> criteria, passed <span class="kw">in</span> checks.items():
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"  {criteria}: {'PASS' <span class="kw">if</span> passed <span class="kw">else</span> 'FAIL'}"</span>)
+
+score = <span class="nb">sum</span>(checks.values())
+strength = <span class="st">"STRONG"</span> <span class="kw">if</span> score == <span class="nu">5</span> <span class="kw">else</span> <span class="st">"MODERATE"</span> <span class="kw">if</span> score >= <span class="nu">3</span> <span class="kw">else</span> <span class="st">"WEAK"</span>
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Strength: {strength} ({score}/5)"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter password: Python@123
+  Length (>=8): PASS
+  Uppercase: PASS
+  Lowercase: PASS
+  Digit: PASS
+  Special char: PASS
+Strength: STRONG (5/5)</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 7 -->
+                <div class="week-divider" id="week7">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 7 &mdash; CO2</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 19 -->
+                <div class="experiment-card" id="exp19">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">19</div>
+                        <div class="exp-title">Student Database (Dictionary)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>students = {}  <span class="cm"># {id: {"name": str, "grades": list}}</span>
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    <span class="nb">print</span>(<span class="st">"\n1.Add 2.Update 3.Average 4.Display 5.Exit"</span>)
+    ch = <span class="nb">input</span>(<span class="st">"Choice: "</span>)
+    
+    <span class="kw">if</span> ch == <span class="st">'1'</span>:
+        sid = <span class="nb">input</span>(<span class="st">"ID: "</span>)
+        name = <span class="nb">input</span>(<span class="st">"Name: "</span>)
+        grades = <span class="nb">list</span>(<span class="nb">map</span>(<span class="nb">float</span>, <span class="nb">input</span>(<span class="st">"Grades: "</span>).split()))
+        students[sid] = {<span class="st">"name"</span>: name, <span class="st">"grades"</span>: grades}
+    <span class="kw">elif</span> ch == <span class="st">'2'</span>:
+        sid = <span class="nb">input</span>(<span class="st">"ID to update: "</span>)
+        <span class="kw">if</span> sid <span class="kw">in</span> students:
+            students[sid][<span class="st">"grades"</span>] = <span class="nb">list</span>(<span class="nb">map</span>(<span class="nb">float</span>, <span class="nb">input</span>(<span class="st">"New grades: "</span>).split()))
+    <span class="kw">elif</span> ch == <span class="st">'3'</span>:
+        total = <span class="nu">0</span>
+        <span class="kw">for</span> sid, data <span class="kw">in</span> students.items():
+            avg = <span class="nb">sum</span>(data[<span class="st">"grades"</span>]) / <span class="nb">len</span>(data[<span class="st">"grades"</span>])
+            <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{data['name']}: {avg:.2f}"</span>)
+            total += avg
+        <span class="kw">if</span> students:
+            <span class="nb">print</span>(<span class="nb">f</span><span class="st">"Overall avg: {total/<span class="nb">len</span>(students):.2f}"</span>)
+    <span class="kw">elif</span> ch == <span class="st">'4'</span>:
+        <span class="kw">for</span> sid, d <span class="kw">in</span> students.items():
+            <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{sid}: {d['name']} - {d['grades']}"</span>)
+    <span class="kw">elif</span> ch == <span class="st">'5'</span>:
+        <span class="kw">break</span></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 20 -->
+                <div class="experiment-card" id="exp20">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">20</div>
+                        <div class="exp-title">Sort Mobile Data by 'make' Attribute</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>l = [
+    {<span class="st">'make'</span>: <span class="st">'Samsung'</span>, <span class="st">'model'</span>: <span class="st">'j2'</span>, <span class="st">'year'</span>: <span class="nu">2016</span>},
+    {<span class="st">'make'</span>: <span class="st">'Xiomi'</span>, <span class="st">'model'</span>: <span class="st">'note3'</span>, <span class="st">'year'</span>: <span class="nu">2018</span>},
+    {<span class="st">'make'</span>: <span class="st">'Apple'</span>, <span class="st">'model'</span>: <span class="st">'XE'</span>, <span class="st">'year'</span>: <span class="nu">2019</span>}
+]
+
+sorted_mobiles = <span class="nb">sorted</span>(l, key=<span class="kw">lambda</span> x: x[<span class="st">'make'</span>])
+
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Make':&lt;12} {'Model':&lt;10} {'Year'}"</span>)
+<span class="nb">print</span>(<span class="st">"-"</span> * <span class="nu">35</span>)
+<span class="kw">for</span> m <span class="kw">in</span> sorted_mobiles:
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{m['make']:&lt;12} {m['model']:&lt;10} {m['year']}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Make         Model      Year
+-----------------------------------
+Apple        XE         2019
+Samsung      j2         2016
+Xiomi        note3      2018</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 21 -->
+                <div class="experiment-card" id="exp21">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">21</div>
+                        <div class="exp-title">Filter Students by Marks Threshold</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>students = [
+    {<span class="st">"name"</span>: <span class="st">"Alice"</span>, <span class="st">"marks"</span>: <span class="nu">98</span>},
+    {<span class="st">"name"</span>: <span class="st">"Bob"</span>, <span class="st">"marks"</span>: <span class="nu">85</span>},
+    {<span class="st">"name"</span>: <span class="st">"Charlie"</span>, <span class="st">"marks"</span>: <span class="nu">92</span>},
+    {<span class="st">"name"</span>: <span class="st">"Diana"</span>, <span class="st">"marks"</span>: <span class="nu">78</span>},
+    {<span class="st">"name"</span>: <span class="st">"Eve"</span>, <span class="st">"marks"</span>: <span class="nu">96</span>}
+]
+
+threshold = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Enter marks threshold: "</span>))
+filtered = [s <span class="kw">for</span> s <span class="kw">in</span> students <span class="kw">if</span> s[<span class="st">"marks"</span>] > threshold]
+
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Students with marks > {threshold}:"</span>)
+<span class="kw">for</span> s <span class="kw">in</span> filtered:
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"  {s['name']}: {s['marks']}"</span>)
+
+<span class="cm"># Using filter</span>
+names = <span class="nb">list</span>(<span class="nb">map</span>(<span class="kw">lambda</span> s: s[<span class="st">"name"</span>], <span class="nb">filter</span>(<span class="kw">lambda</span> s: s[<span class="st">"marks"</span>] > threshold, students)))
+<span class="nb">print</span>(<span class="st">"Names:"</span>, names)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Enter marks threshold: 90
+Students with marks > 90.0:
+  Alice: 98
+  Charlie: 92
+  Eve: 96
+Names: ['Alice', 'Charlie', 'Eve']</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 8 -->
+                <div class="week-divider" id="week8">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 8 &mdash; CO3</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 22 -->
+                <div class="experiment-card" id="exp22">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">22</div>
+                        <div class="exp-title">Simple Interest (Senior Citizen) & Lambda Square</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="cm"># Simple Interest with senior citizen check</span>
+principal = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Principal: "</span>))
+time = <span class="nb">float</span>(<span class="nb">input</span>(<span class="st">"Time (years): "</span>))
+is_senior = <span class="nb">input</span>(<span class="st">"Senior citizen? (y/n): "</span>).lower() == <span class="st">'y'</span>
+
+roi = <span class="nu">12</span> <span class="kw">if</span> is_senior <span class="kw">else</span> <span class="nu">10</span>
+interest = (principal * roi * time) / <span class="nu">100</span>
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"ROI: {roi}%, Interest: Rs.{interest:.2f}"</span>)
+
+<span class="cm"># Lambda: Square numbers 1 to 5</span>
+square = <span class="kw">lambda</span> x: x ** <span class="nu">2</span>
+<span class="nb">print</span>(<span class="st">"Squares:"</span>, [<span class="nb">list</span>(<span class="nb">map</span>(square, <span class="nb">range</span>(<span class="nu">1</span>, <span class="nu">6</span>)))])</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Principal: 10000
+Time (years): 2
+Senior citizen? (y/n): y
+ROI: 12%, Interest: Rs.2400.00
+Squares: [[1, 4, 9, 16, 25]]</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 23 -->
+                <div class="experiment-card" id="exp23">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">23</div>
+                        <div class="exp-title">Fibonacci Sequence (Recursive)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">def</span> <span class="fn">fib</span>(n):
+    <span class="kw">if</span> n &lt;= <span class="nu">0</span>: <span class="kw">return</span> <span class="nu">0</span>
+    <span class="kw">elif</span> n == <span class="nu">1</span>: <span class="kw">return</span> <span class="nu">1</span>
+    <span class="kw">else</span>: <span class="kw">return</span> fib(n-<span class="nu">1</span>) + fib(n-<span class="nu">2</span>)
+
+n = <span class="nb">int</span>(<span class="nb">input</span>(<span class="st">"Number of terms: "</span>))
+sequence = [fib(i) <span class="kw">for</span> i <span class="kw">in</span> <span class="nb">range</span>(n)]
+<span class="nb">print</span>(<span class="st">"Fibonacci:"</span>, sequence)
+
+<span class="cm"># Optimized with memoization</span>
+<span class="kw">from</span> functools <span class="kw">import</span> lru_cache
+
+<span class="dc">@lru_cache</span>
+<span class="kw">def</span> <span class="fn">fib_fast</span>(n):
+    <span class="kw">if</span> n &lt;= <span class="nu">1</span>: <span class="kw">return</span> n
+    <span class="kw">return</span> fib_fast(n-<span class="nu">1</span>) + fib_fast(n-<span class="nu">2</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Number of terms: 10
+Fibonacci: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 24 -->
+                <div class="experiment-card" id="exp24">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">24</div>
+                        <div class="exp-title">Celsius to Fahrenheit (map + lambda)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre>Celsius = [<span class="nu">34.56</span>, <span class="nu">23.67</span>, <span class="nu">45.67</span>, <span class="nu">67</span>, <span class="nu">34</span>]
+
+<span class="cm"># F = (C * 9/5) + 32</span>
+Fahrenheit = <span class="nb">list</span>(<span class="nb">map</span>(<span class="kw">lambda</span> c: (c * <span class="nu">9</span>/<span class="nu">5</span>) + <span class="nu">32</span>, Celsius))
+
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"{'Celsius':&lt;12} {'Fahrenheit'}"</span>)
+<span class="nb">print</span>(<span class="st">"-"</span> * <span class="nu">28</span>)
+<span class="kw">for</span> c, f <span class="kw">in</span> <span class="nb">zip</span>(Celsius, Fahrenheit):
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{c:&lt;12} {f:&lt;.2f}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Celsius      Fahrenheit
+----------------------------
+34.56        94.21
+23.67        74.61
+45.67        114.21
+67           152.60
+34           93.20</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 9 -->
+                <div class="week-divider" id="week9">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 9 &mdash; CO3</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 25 -->
+                <div class="experiment-card" id="exp25">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">25</div>
+                        <div class="exp-title">Division with Custom Exception</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">class</span> <span class="fn">DivisionByZeroError</span>(<span class="nb">Exception</span>):
+    <span class="kw">pass</span>
+
+<span class="kw">def</span> <span class="fn">calculate_quotient</span>(num, den):
+    <span class="kw">if</span> den == <span class="nu">0</span>:
+        <span class="kw">raise</span> DivisionByZeroError(<span class="st">"Cannot divide by zero!"</span>)
+    <span class="kw">return</span> num / den
+
+<span class="cm"># Test cases</span>
+test_cases = [(<span class="nu">10</span>,<span class="nu">2</span>), (<span class="nu">15</span>,<span class="nu">3</span>), (<span class="nu">20</span>,<span class="nu">0</span>), (<span class="nu">-10</span>,<span class="nu">5</span>)]
+<span class="kw">for</span> num, den <span class="kw">in</span> test_cases:
+    <span class="kw">try</span>:
+        <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{num}/{den} = {calculate_quotient(num, den)}"</span>)
+    <span class="kw">except</span> DivisionByZeroError <span class="kw">as</span> e:
+        <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{num}/{den} -> ERROR: {e}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>10/2 = 5.0
+15/3 = 5.0
+20/0 -> ERROR: Cannot divide by zero!
+-10/5 = -2.0</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 26 -->
+                <div class="experiment-card" id="exp26">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">26</div>
+                        <div class="exp-title">Greet User with Default Parameter</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">def</span> <span class="fn">greet_user</span>(name, greeting=<span class="st">"Hello."</span>):
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"{greeting} {name}"</span>)
+
+greet_user(<span class="st">"Alice"</span>, <span class="st">"Good morning,"</span>)
+greet_user(<span class="st">"Bob"</span>)  <span class="cm"># Uses default "Hello."</span>
+greet_user(greeting=<span class="st">"Welcome,"</span>, name=<span class="st">"Charlie"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Good morning. Alice
+Hello. Bob
+Welcome. Charlie</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 27 -->
+                <div class="experiment-card" id="exp27">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">27</div>
+                        <div class="exp-title">Number Guessing Game (Custom Exceptions)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">import</span> random
+
+<span class="kw">class</span> <span class="fn">ValueTooLargeError</span>(<span class="nb">Exception</span>): <span class="kw">pass</span>
+<span class="kw">class</span> <span class="fn">ValueTooSmallError</span>(<span class="nb">Exception</span>): <span class="kw">pass</span>
+
+secret = random.randint(<span class="nu">1</span>, <span class="nu">100</span>)
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    <span class="kw">try</span>:
+        guess = <span class="nb">int</span>(<span class="nb">input</span>(<span class="st">"Guess (1-100): "</span>))
+        <span class="kw">if</span> guess > secret:
+            <span class="kw">raise</span> ValueTooLargeError
+        <span class="kw">elif</span> guess &lt; secret:
+            <span class="kw">raise</span> ValueTooSmallError
+        <span class="kw">else</span>:
+            <span class="nb">print</span>(<span class="st">"Correct!"</span>)
+            <span class="kw">break</span>
+    <span class="kw">except</span> ValueTooLargeError:
+        <span class="nb">print</span>(<span class="st">"Too large!"</span>)
+    <span class="kw">except</span> ValueTooSmallError:
+        <span class="nb">print</span>(<span class="st">"Too small!"</span>)
+    <span class="kw">except</span> <span class="nb">ValueError</span>:
+        <span class="nb">print</span>(<span class="st">"Enter a number!"</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 10 -->
+                <div class="week-divider" id="week10">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 10 &mdash; CO4</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 29 -->
+                <div class="experiment-card" id="exp29">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">29</div>
+                        <div class="exp-title">Operator Overloading for Point Class</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">import</span> math
+
+<span class="kw">class</span> <span class="fn">Point</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="se">self</span>, x, y):
+        <span class="se">self</span>.x = x
+        <span class="se">self</span>.y = y
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="se">self</span>):
+        <span class="kw">return</span> <span class="nb">f</span><span class="st">"Point({<span class="se">self</span>.x}, {<span class="se">self</span>.y})"</span>
+
+    <span class="cm"># a) Overload (-) for distance</span>
+    <span class="kw">def</span> <span class="fn">__sub__</span>(<span class="se">self</span>, other):
+        <span class="kw">return</span> math.sqrt((<span class="se">self</span>.x - other.x)**<span class="nu">2</span> + (<span class="se">self</span>.y - other.y)**<span class="nu">2</span>)
+
+    <span class="kw">def</span> <span class="fn">dist_origin</span>(<span class="se">self</span>):
+        <span class="kw">return</span> math.sqrt(<span class="se">self</span>.x**<span class="nu">2</span> + <span class="se">self</span>.y**<span class="nu">2</span>)
+
+    <span class="cm"># b) Overload (>=) for distance from origin</span>
+    <span class="kw">def</span> <span class="fn">__ge__</span>(<span class="se">self</span>, other):
+        <span class="kw">return</span> <span class="se">self</span>.dist_origin() >= other.dist_origin()
+
+P1, P2, P3 = Point(<span class="nu">3</span>,<span class="nu">4</span>), Point(<span class="nu">6</span>,<span class="nu">8</span>), Point(<span class="nu">5</span>,<span class="nu">12</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"P1-P2 distance: {P1-P2:.2f}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"P3 >= P1: {P3>=P1}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>P1-P2 distance: 5.00
+P3 >= P1: True</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 30 -->
+                <div class="experiment-card" id="exp30">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">30</div>
+                        <div class="exp-title">Student Details with Marks Validation Exception</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">class</span> <span class="fn">InvalidMarksError</span>(<span class="nb">Exception</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="se">self</span>, subject, marks):
+        <span class="se">self</span>.message = <span class="nb">f</span><span class="st">"Invalid {subject}: {marks}. Must be 0-100."</span>
+        <span class="nb">super</span>().__init__(<span class="se">self</span>.message)
+
+<span class="kw">class</span> <span class="fn">Student</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="se">self</span>, name, roll, phy, chem, math):
+        <span class="se">self</span>.name = name
+        <span class="se">self</span>.roll = roll
+        <span class="kw">for</span> subj, marks <span class="kw">in</span> [(<span class="st">"Physics"</span>,phy),(<span class="st">"Chemistry"</span>,chem),(<span class="st">"Math"</span>,math)]:
+            <span class="kw">if</span> marks &lt; <span class="nu">0</span> <span class="kw">or</span> marks > <span class="nu">100</span>:
+                <span class="kw">raise</span> InvalidMarksError(subj, marks)
+        <span class="se">self</span>.phy, <span class="se">self</span>.chem, <span class="se">self</span>.math = phy, chem, math
+
+    <span class="kw">def</span> <span class="fn">average</span>(<span class="se">self</span>):
+        <span class="kw">return</span> (<span class="se">self</span>.phy + <span class="se">self</span>.chem + <span class="se">self</span>.math) / <span class="nu">3</span>
+
+<span class="kw">try</span>:
+    s = Student(<span class="st">"Rahul"</span>, <span class="st">"001"</span>, <span class="nu">85</span>, <span class="nu">92</span>, <span class="nu">78</span>)
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"Average: {s.average():.2f}%"</span>)
+<span class="kw">except</span> InvalidMarksError <span class="kw">as</span> e:
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"Error: {e}"</span>)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Average: 85.00%</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 31 -->
+                <div class="experiment-card" id="exp31">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">31</div>
+                        <div class="exp-title">Bank Account Management (Abstract Class, Polymorphism)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
+
+<span class="kw">class</span> <span class="fn">Account</span>(ABC):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="se">self</span>, acc_no, holder, balance):
+        <span class="se">self</span>.__acc_no = acc_no  <span class="cm"># Private</span>
+        <span class="se">self</span>.__holder = holder
+        <span class="se">self</span>.__balance = balance
+
+    <span class="dc">@abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">calculate_interest</span>(<span class="se">self</span>): <span class="kw">pass</span>
+
+    <span class="kw">def</span> <span class="fn">get_balance</span>(<span class="se">self</span>): <span class="kw">return</span> <span class="se">self</span>.__balance
+
+<span class="kw">class</span> <span class="fn">SavingsAccount</span>(Account):
+    <span class="kw">def</span> <span class="fn">calculate_interest</span>(<span class="se">self</span>):
+        interest = <span class="se">self</span>.get_balance() * <span class="nu">0.04</span>
+        <span class="nb">print</span>(<span class="nb">f</span><span class="st">"Savings Interest (4%): Rs.{interest:.2f}"</span>)
+        <span class="kw">return</span> interest
+
+<span class="kw">class</span> <span class="fn">CurrentAccount</span>(Account):
+    <span class="kw">def</span> <span class="fn">calculate_interest</span>(<span class="se">self</span>):
+        interest = <span class="se">self</span>.get_balance() * <span class="nu">0.02</span>
+        <span class="nb">print</span>(<span class="nb">f</span><span class="st">"Current Interest (2%): Rs.{interest:.2f}"</span>)
+        <span class="kw">return</span> interest
+
+<span class="cm"># Runtime polymorphism</span>
+accounts = [SavingsAccount(<span class="st">"SA001"</span>,<span class="st">"Alice"</span>,<span class="nu">50000</span>),
+            CurrentAccount(<span class="st">"CA001"</span>,<span class="st">"Bob"</span>,<span class="nu">100000</span>)]
+<span class="kw">for</span> acc <span class="kw">in</span> accounts:
+    acc.calculate_interest()  <span class="cm"># Same call, different behavior</span></pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Savings Interest (4%): Rs.2000.00
+Current Interest (2%): Rs.2000.00</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEK 11-13 -->
+                <div class="week-divider" id="week11">
+                    <div class="line"></div>
+                    <div class="week-badge">WEEK 11-13 &mdash; CO5</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Exp 32 -->
+                <div class="experiment-card" id="exp32">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">32</div>
+                        <div class="exp-title">Solve Linear Equations (NumPy linalg)</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="callout info"><i class="fas fa-info-circle"></i><span>2x + 3y + z = 13, x - y + 2z = 7, 3x + 4y + z = 22</span></div>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+A = np.array([[<span class="nu">2</span>,<span class="nu">3</span>,<span class="nu">1</span>], [<span class="nu">1</span>,-<span class="nu">1</span>,<span class="nu">2</span>], [<span class="nu">3</span>,<span class="nu">4</span>,<span class="nu">1</span>]])
+B = np.array([<span class="nu">13</span>, <span class="nu">7</span>, <span class="nu">22</span>])
+
+solution = np.linalg.solve(A, B)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"x={solution[0]}, y={solution[1]}, z={solution[2]}"</span>)
+
+<span class="cm"># Verify</span>
+verification = np.dot(A, solution)
+<span class="nb">print</span>(<span class="st">"Verification:"</span>, verification)
+<span class="nb">print</span>(<span class="st">"Correct:"</span>, np.allclose(verification, B))
+
+<span class="cm"># Using inverse</span>
+solution2 = np.linalg.inv(A).dot(B)
+<span class="nb">print</span>(<span class="st">"Using inverse:"</span>, solution2)</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>x=3.0, y=2.0, z=1.0
+Verification: [13.  7. 22.]
+Correct: True
+Using inverse: [3. 2. 1.]</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 33 -->
+                <div class="experiment-card" id="exp33">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">33</div>
+                        <div class="exp-title">Pandas Series Statistics</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+s = pd.Series([<span class="nu">85</span>, <span class="nu">92</span>, <span class="nu">78</span>, <span class="nu">95</span>, <span class="nu">88</span>, <span class="nu">76</span>, <span class="nu">90</span>, <span class="nu">82</span>, <span class="nu">94</span>, <span class="nu">87</span>], name=<span class="st">'Marks'</span>)
+<span class="nb">print</span>(s)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Mean: {s.mean():.2f}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Max: {s.max()}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Min: {s.min()}"</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">"Std: {s.std():.2f}"</span>)
+<span class="nb">print</span>(<span class="st">"\nDescribe:"</span>)
+<span class="nb">print</span>(s.describe())</pre>
+                            </div>
+                            <div class="output-block">
+                                <div class="output-header"><i class="fas fa-terminal"></i> Sample Output</div>
+<pre>Mean: 86.70
+Max: 95
+Min: 76
+Std: 6.34
+
+Describe:
+count    10.000000
+mean     86.700000
+std       6.339395
+min      76.000000
+25%      82.250000
+50%      87.500000
+75%      91.500000
+max      95.000000</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exp 34 -->
+                <div class="experiment-card" id="exp34">
+                    <div class="exp-header" onclick="toggleExp(this)">
+                        <div class="exp-num">34</div>
+                        <div class="exp-title">Pandas DataFrame Operations on student.csv</div>
+                        <div class="exp-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="exp-body">
+                        <div class="exp-content">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span class="code-lang"><i class="fab fa-python"></i> Python</span>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+<pre><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+<span class="cm"># a. Load CSV</span>
+df = pd.read_csv(<span class="st">'student.csv'</span>)
+
+<span class="cm"># b. Rows and columns</span>
+<span class="nb">print</span>(<span class="st">"Shape:"</span>, df.shape)
+
+<span class="cm"># c. Last 5 rows</span>
+<span class="nb">print</span>(df.tail(<span class="nu">5</span>))
+
+<span class="cm"># d. Student with lowest marks</span>
+<span class="nb">print</span>(df.loc[df[<span class="st">'Marks'</span>].idxmin()])
+
+<span class="cm"># e. Total marks of females</span>
+<span class="nb">print</span>(<span class="st">"Female total:"</span>, df[df[<span class="st">'Gender'</span>]==<span class="st">'F'</span>][<span class="st">'Marks'</span>].sum())
+
+<span class="cm"># f. Male student names</span>
+<span class="nb">print</span>(<span class="st">"Males:"</span>, df[df[<span class="st">'Gender'</span>]==<span class="st">'M'</span>][<span class="st">'Name'</span>].tolist())
+
+<span class="cm"># g. Mean age</span>
+<span class="nb">print</span>(<span class="st">"Mean age:"</span>, df[<span class="st">'Age'</span>].mean())
+
+<span class="cm"># h. Line plot marks</span>
+plt.plot(df[<span class="st">'Name'</span>], df[<span class="st">'Marks'</span>], marker=<span class="st">'o'</span>)
+plt.xticks(rotation=<span class="nu">45</span>)
+plt.title(<span class="st">"Student Marks"</span>)
+plt.tight_layout()
+plt.show()
+
+<span class="cm"># i. Oldest student index</span>
+<span class="nb">print</span>(<span class="st">"Oldest idx:"</span>, df[
