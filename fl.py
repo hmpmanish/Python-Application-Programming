@@ -12,3 +12,6 @@ print(content)
 f = open(r"C:\Users\Manish Pandey\Desktop\sample.txt", "a")
 f.write("Appended line\n")
 f.close()
+
+
+with open("sample.txt", "a") as f:
